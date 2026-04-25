@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Soporte - UNH HelpDesk 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --unh-blue: #0d1b5e; 
+            --unh-gold: #f5c518; 
+            --unh-cyan: #00f2fe; 
+            --unh-red: #ff4b2b;
+        }
+        
+        body { 
+            background: #050a15; 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+        }
+        
+        /* Barra superior */
+        .top-bar {
+            background: #020610;
+            border-bottom: 1px solid #1a2a6c;
+            padding: 8px 0;
+            font-size: 0.8rem;
+        }
+        
+        /* Menú Estándar (Igual a todas tus páginas) */
+        .navbar { 
+            background: rgba(13, 27, 94, 0.8); 
+            backdrop-filter: blur(15px); 
+            border-bottom: 1px solid rgba(245, 197, 24, 0.3); 
+        }
+        .nav-link { 
+            color: rgba(255,255,255,0.6) !important; 
+            transition: 0.3s; 
+            margin: 0 10px; 
+        }
+        .nav-link:hover, .nav-link.active { 
+            color: var(--unh-gold) !important; 
+            text-shadow: 0 0 10px var(--unh-gold); 
+        }
+        
+        /* Tarjetas estilo glass */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .glass-card:hover {
+            border-color: var(--unh-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        /* Botón principal */
+        .btn-solicitar {
+            background: linear-gradient(135deg, var(--unh-gold), #ff8c00);
+            border: none;
+            color: #0a0e1a;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        .btn-solicitar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(245,197,24,0.5);
+            color: #0a0e1a;
+        }
+        
+        /* Formulario de solicitud */
+        .form-control, .form-select {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .form-control:focus, .form-select:focus {
+            background: rgba(0,0,0,0.7);
+            border-color: var(--unh-gold);
+            box-shadow: 0 0 10px rgba(245,197,24,0.3);
+            color: white;
+        }
+        .form-label {
+            color: var(--unh-cyan);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        /* Ticket reciente */
+        .ticket-item {
+            background: rgba(255,255,255,0.03);
+            border-left: 4px solid var(--unh-gold);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: 0.3s;
+        }
+        .ticket-item:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(5px);
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .status-pendiente { background: rgba(255,193,7,0.2); color: #ffc107; border: 1px solid #ffc107; }
+        .status-proceso { background: rgba(0,242,254,0.2); color: #00f2fe; border: 1px solid #00f2fe; }
+        .status-resuelto { background: rgba(0,255,100,0.2); color: #00ff64; border: 1px solid #00ff64; }
+        
+        /* Categorías de ayuda rápida */
+        .help-category {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .help-category:hover {
+            background: rgba(245,197,24,0.1);
+            transform: translateY(-5px);
+        }
+        .help-category i {
+            font-size: 2rem;
+            color: var(--unh-gold);
+            margin-bottom: 10px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(2, 6, 16, 0.9);
+            border-top: 1px solid rgba(245,197,24,0.2);
+            margin-top: 60px;
+            padding: 30px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Animaciones */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra superior institucional -->
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-university me-2 text-warning"></i>
+                <span>Universidad Nacional de Huancavelica - Mesa de Ayuda TI</span>
+            </div>
+            <div>
+                <i class="fas fa-user-circle me-1"></i>
+                <span class="small">Bienvenido, <strong>Juan Pérez</strong> (Docente)</span>
+                <a href="#" class="text-white-50 ms-3 small text-decoration-none"><i class="fas fa-sign-out-alt"></i> Salir</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="maestra.html">
+                UNH <span style="color:var(--unh-gold)">2026</span>
+                <small class="d-block fs-6 text-white-50" style="font-size: 0.7rem !important;">HelpDesk Inteligente</small>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../maestra.html">🏠 Inicio</a>
+                <a class="nav-link active" href="soporte.html">🎫 Soporte</a>
+                <a class="nav-link" href="usuarios.html">👥 Usuarios</a>
+                <a class="nav-link" href="inventario.html">💻 Inventario</a>
+                <a class="nav-link" href="conocimiento.html">📞 Contacto</a>
+                <a class="nav-link" href="reportes.html">📊 Reportes</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Hero / Banner principal -->
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="bg-warning rounded-circle p-3" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-headset text-dark fs-2"></i>
+                    </div>
+                    <div>
+                        <h1 class="fw-bold mb-0">¿Necesitas <span class="text-warning">ayuda técnica?</span></h1>
+                        <p class="text-white-50 mt-2">
+                            <i class="fas fa-bolt me-2 text-warning"></i>Solicita soporte en menos de 2 minutos. 
+                            Nuestro equipo IA asignará tu caso automáticamente.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="glass-card d-inline-block p-3">
+                    <i class="fas fa-clock text-warning me-2"></i>
+                    <span class="small">Tiempo promedio respuesta: <strong class="text-success">1.5 horas</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección principal: Formulario + Tickets recientes -->
+        <div class="row g-4">
+            <!-- Columna Izquierda: Formulario de Solicitud -->
+            <div class="col-lg-6">
+                <div class="glass-card">
+                    <h4 class="mb-3"><i class="fas fa-pen-alt text-warning me-2"></i>Nueva Solicitud de Soporte</h4>
+                    <p class="text-white-50 small mb-4">Completa el formulario y nuestro sistema generará un ticket automáticamente.</p>
+                    
+                    <form id="ticketForm">
+                        <div class="mb-3">
+                            <label class="form-label"><i class="fas fa-tag me-1"></i>Tipo de problema</label>
+                            <select class="form-select" required>
+                                <option value="">Selecciona una categoría...</option>
+                                <option>💻 Hardware (PC, laptop, periféricos)</option>
+                                <option>🖥️ Software (Office, sistemas, antivirus)</option>
+                                <option>🌐 Redes y conectividad (Internet, WiFi)</option>
+                                <option>🔐 Seguridad y accesos (contraseñas, permisos)</option>
+                                <option>📧 Correo y comunicaciones (Outlook, Teams)</option>
+                                <option>📊 Sistema SIGA / SIAF / SEACE</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label"><i class="fas fa-heading me-1"></i>Asunto / Título</label>
+                            <input type="text" class="form-control" placeholder="Ej: No puedo acceder al aula virtual" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label"><i class="fas fa-align-left me-1"></i>Descripción del problema</label>
+                            <textarea class="form-control" rows="4" placeholder="Describe detalladamente el inconveniente que presentas..."></textarea>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="fas fa-building me-1"></i>Ubicación</label>
+                                <select class="form-select">
+                                    <option>Rectorado</option>
+                                    <option>Pabellón A</option>
+                                    <option>Pabellón B</option>
+                                    <option>Pabellón C</option>
+                                    <option>Biblioteca Central</option>
+                                    <option>Facultad de Ciencias</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="fas fa-exclamation-triangle me-1"></i>Prioridad</label>
+                                <select class="form-select">
+                                    <option>Normal (Respuesta en 24h)</option>
+                                    <option>Urgente (Respuesta en 4h)</option>
+                                    <option>Crítico (Respuesta inmediata)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-solicitar w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Enviar Solicitud
+                        </button>
+                    </form>
+                    
+                    <div class="alert alert-success mt-3 d-none" id="successAlert">
+                        <i class="fas fa-check-circle me-2"></i> ¡Ticket creado exitosamente! Te contactaremos a la brevedad.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Columna Derecha: Mis Tickets Recientes -->
+            <div class="col-lg-6">
+                <div class="glass-card">
+                    <h4 class="mb-3"><i class="fas fa-history text-warning me-2"></i>Mis Solicitudes Recientes</h4>
+                    <p class="text-white-50 small mb-3">Seguimiento de tus tickets activos</p>
+                    
+                    <!-- Lista de tickets simulados -->
+                    <div class="ticket-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong class="text-warning">#TK-92</strong>
+                                <p class="mb-0 small mt-1">Falla en sistema SIAF - No genera reportes</p>
+                                <small class="text-white-50"><i class="far fa-calendar-alt me-1"></i>Hace 2 horas</small>
+                            </div>
+                            <div>
+                                <span class="status-badge status-proceso">En proceso</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong class="text-warning">#TK-89</strong>
+                                <p class="mb-0 small mt-1">Laptop no enciende - Laboratorio 304</p>
+                                <small class="text-white-50"><i class="far fa-calendar-alt me-1"></i>Ayer, 15:30</small>
+                            </div>
+                            <div>
+                                <span class="status-badge status-pendiente">Pendiente</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong class="text-warning">#TK-85</strong>
+                                <p class="mb-0 small mt-1">Configuración de correo institucional</p>
+                                <small class="text-white-50"><i class="far fa-calendar-alt me-1"></i>Hace 3 días</small>
+                            </div>
+                            <div>
+                                <span class="status-badge status-resuelto">Resuelto</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-warning text-decoration-none small">Ver historial completo →</a>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta de estadísticas rápidas -->
+                <div class="glass-card mt-4">
+                    <h5 class="mb-3"><i class="fas fa-chart-simple text-warning me-2"></i>Estadísticas de Soporte</h5>
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <h3 class="text-warning mb-0">94%</h3>
+                            <small class="text-white-50">Satisfacción</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="text-warning mb-0">1.5h</h3>
+                            <small class="text-white-50">Tiempo respuesta</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="text-warning mb-0">127</h3>
+                            <small class="text-white-50">Tickets/mes</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección de Ayuda Rápida (Categorías) -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h4 class="mb-4"><i class="fas fa-life-ring text-warning me-2"></i>Soluciones Rápidas</h4>
+            </div>
+            <div class="col-md-3">
+                <div class="help-category" onclick="quickHelp('contraseña')">
+                    <i class="fas fa-key"></i>
+                    <h6>Olvidé mi contraseña</h6>
+                    <small class="text-white-50">Recupera acceso</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="help-category" onclick="quickHelp('wifi')">
+                    <i class="fas fa-wifi"></i>
+                    <h6>Problemas WiFi</h6>
+                    <small class="text-white-50">Red UNH</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="help-category" onclick="quickHelp('correo')">
+                    <i class="fas fa-envelope"></i>
+                    <h6>Configurar Correo</h6>
+                    <small class="text-white-50">Outlook / Gmail</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="help-category" onclick="quickHelp('aula')">
+                    <i class="fas fa-chalkboard"></i>
+                    <h6>Aula Virtual</h6>
+                    <small class="text-white-50">Acceso y cursos</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-warning">UNH HelpDesk 2026</h6>
+                    <p class="small text-white-50">Sistema de gestión de tickets con asignación dinámica por IA.<br>
+                    Oficina de Tecnologías de la Información - Universidad Nacional de Huancavelica.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-warning">Enlaces</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-white-50 text-decoration-none">Políticas de Soporte</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Manual de Usuario</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Descargar App</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-warning">Contacto</h6>
+                    <p class="small text-white-50"><i class="fas fa-envelope me-2"></i> helpdesk@unh.edu.pe<br>
+                    <i class="fas fa-phone me-2"></i> +51 (067) 451 234<br>
+                    <i class="fab fa-whatsapp me-2"></i> +51 987 654 321</p>
+                </div>
+            </div>
+            <hr class="bg-white-50">
+            <div class="text-center small text-white-50">
+                &copy; 2026 UNH - Proyecto HelpDesk Inteligente | Versión 2.0
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simular envío de formulario
+        document.getElementById('ticketForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Mostrar alerta de éxito
+            const alert = document.getElementById('successAlert');
+            alert.classList.remove('d-none');
+            
+            // Limpiar formulario (opcional)
+            this.reset();
+            
+            // Ocultar alerta después de 5 segundos
+            setTimeout(() => {
+                alert.classList.add('d-none');
+            }, 5000);
+            
+            // Aquí después conectarás con PHP/MySQL
+            console.log('Ticket enviado - Conectar con backend');
+        });
+        
+        // Función para ayuda rápida (simula apertura de tutorial)
+        function quickHelp(topic) {
+            let mensaje = '';
+            switch(topic) {
+                case 'contraseña':
+                    mensaje = '📌 Para recuperar tu contraseña, solicita reset en la oficina de TI o usa el botón "Olvidé mi contraseña" en el login.';
+                    break;
+                case 'wifi':
+                    mensaje = '📌 Red WiFi UNH: Conéctate a "UNH-Oficial" con tu DNI como usuario y contraseña predeterminada.';
+                    break;
+                case 'correo':
+                    mensaje = '📌 Configuración Outlook: servidor mail.unh.edu.pe, puerto 993 (SSL). Solicita credenciales a TI.';
+                    break;
+                case 'aula':
+                    mensaje = '📌 Acceso al Aula Virtual: https://aulavirtual.unh.edu.pe - Usuario: DNI, Contraseña: fecha de nacimiento (ddmmyyyy).';
+                    break;
+            }
+            alert(mensaje);
+        }
+    </script>
+</body>
+</html>

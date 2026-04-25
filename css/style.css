@@ -1,0 +1,45 @@
+/* Estilo Base Cyber-UNH */
+body {
+    background: radial-gradient(circle at top, #0d1b5e, #050a15);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+}
+
+/* Tarjeta Flotante Neón */
+.ticket-card-float {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.ticket-card-float:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: #f5c518;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Indicador lateral */
+.priority-indicator {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+}
+
+.bg-normal { background: #00f2fe; box-shadow: 0 0 15px #00f2fe; }
+.bg-urgente { background: #f5c518; box-shadow: 0 0 15px #f5c518; }
+.bg-critico { background: #ff4b2b; box-shadow: 0 0 15px #ff4b2b; }
+
+/* Otros elementos */
+.ticket-id { font-family: 'Courier New', monospace; font-weight: bold; color: #f5c518; margin-right: 20px; }
+.service-info h6 { margin-bottom: 2px; font-weight: bold; }
+.status-pill { border-radius: 20px; padding: 5px 15px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.2); }
